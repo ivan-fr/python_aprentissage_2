@@ -233,5 +233,7 @@ class Gardien(Astar):
             self.coord_gardien = self.path[self.index_path]
             self.index_path += 1
 
+        if self.coord_gardien == (self.cible._x, self.cible._y):
+            self.canvas.master.event_generate('<<perdu>>')
 
         self.boucle_after = self.canvas.master.after(100, self.gardien_move)
