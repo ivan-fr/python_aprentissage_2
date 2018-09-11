@@ -191,7 +191,7 @@ class Joueur(Personnage):
         if (orientation_x, orientation_y) == self.sortie:
             self.canvas.master.event_generate('<<reset>>')
 
-        self.boucle_after = self.canvas.master.after(100, self.joueur_move)
+        self.boucle_after = self.canvas.master.after(150, self.joueur_move)
 
     def change_direction(self, event):
         self.selected_orientation = event.keysym
@@ -236,4 +236,4 @@ class Gardien(Astar):
         if self.coord_gardien == (self.cible._x, self.cible._y):
             self.canvas.master.event_generate('<<perdu>>')
 
-        self.boucle_after = self.canvas.master.after(100, self.gardien_move)
+        self.boucle_after = self.canvas.master.after(150, self.gardien_move)

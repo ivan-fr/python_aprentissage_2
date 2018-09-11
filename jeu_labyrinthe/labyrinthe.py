@@ -5,7 +5,6 @@ from jeu_labyrinthe.constants import *
 from jeu_labyrinthe.utils import chargez_image_from_PIL
 from jeu_labyrinthe.personnage import Joueur, Gardien
 from jeu_labyrinthe.utils import Cell
-import gc
 
 
 class Main(Tk):
@@ -92,7 +91,6 @@ class Labyrinthe(Canvas):
         self.master.bind('<<joueur_moved>>', self.dispatch_gardiens)
         self.master.bind('<<perdu>>', self.perdu)
 
-
     def remplir_structures(self, niveaux):
         with open(fichier_de_niveaux, "r") as fichier:
 
@@ -176,7 +174,8 @@ class Labyrinthe(Canvas):
             gardien.update_cible()
 
     def perdu(self, event):
-        text = self.create_text(cote_fenetre / 2, 20, anchor=CENTER, text="Perdu !!!", fill="black", font="Arial 25 bold")
+        text = self.create_text(cote_fenetre / 2, 20, anchor=CENTER, text="Perdu !!!", fill="black",
+                                font="Arial 25 bold")
         rectangle = self.create_rectangle(self.bbox(text), fill="white")
         self.tag_lower(rectangle, text)
         self.stop()
