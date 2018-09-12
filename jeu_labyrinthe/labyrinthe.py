@@ -1,5 +1,4 @@
 from tkinter import *
-from functools import partial
 
 from jeu_labyrinthe.constants import *
 from jeu_labyrinthe.utils import chargez_image_from_PIL
@@ -52,7 +51,7 @@ class Menu(Frame):
         for i, choice in enumerate(self.choices, 2):
             label = Label(self, text=choice)
             radiobutton = Radiobutton(self, variable=self.variable_niveau, value=choice,
-                                      command=partial(self.update_variables))
+                                      command=self.update_variables)
             label.grid(row=i, column=0)
             radiobutton.grid(row=i, column=1)
 
