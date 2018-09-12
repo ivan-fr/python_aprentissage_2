@@ -10,8 +10,8 @@ class Personnage(object):
         self.canvas = canvas
         self.cells = cells
 
-        self.cote_rectangle_x = int(cote_fenetre / canvas.grid_width)
-        self.cote_rectangle_y = int(cote_fenetre / canvas.grid_height)
+        self.cote_rectangle_x = int(COTE_FENETRE / canvas.grid_width)
+        self.cote_rectangle_y = int(COTE_FENETRE / canvas.grid_height)
 
         self.orientation_dict = {'Left': lambda x, y: (x - 1, y),
                                  'Right': lambda x, y: (x + 1, y),
@@ -23,13 +23,13 @@ class Personnage(object):
         self.selected_orientation = None
         self.boucle_after = None
 
-        for direction in ('right', 'up', 'left', 'down'):
-            setattr(self, 'photo_' + self.__class__.__name__.lower() + '_' + direction,
-                    chargez_image_from_PIL(globals()['image_' + self.__class__.__name__.lower() + '_' + direction],
+        for direction in ('RIGHT', 'UP', 'LEFT', 'DOWN'):
+            setattr(self, 'photo_' + self.__class__.__name__.lower() + '_' + direction.lower(),
+                    chargez_image_from_PIL(globals()['IMAGE_' + self.__class__.__name__.upper() + '_' + direction],
                                            resize=(self.cote_rectangle_x, self.cote_rectangle_y)))
 
-            setattr(canvas.master, 'photo_' + self.__class__.__name__.lower() + '_' + direction,
-                    getattr(self, 'photo_' + self.__class__.__name__.lower() + '_' + direction))
+            setattr(canvas.master, 'photo_' + self.__class__.__name__.lower() + '_' + direction.lower(),
+                    getattr(self, 'photo_' + self.__class__.__name__.lower() + '_' + direction.lower()))
 
         name_image = 'photo_' + self.__class__.__name__.lower() + '_right'
         self.image_object = self.canvas.create_image(*self.get_args_coords(*coords_object),

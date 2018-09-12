@@ -59,6 +59,7 @@ print(p1 + p2)
 print(p1.somme(p2))
 print('=====')
 
+
 class Rationnelle(object):
     def __init__(self, numerateur, denominateur):
         self.numer = numerateur
@@ -82,19 +83,6 @@ class Rationnelle(object):
 
 
 class FractRationnelle(Rationnelle):
-    def __init__(self, numerateur, denominateur):
-        self.numer = numerateur
-        self.denom = denominateur
-
-    def __add__(self, other):
-        tmp = super(FractRationnelle, self).__add__(other)
-
-        return FractRationnelle(tmp.numer, tmp.denom)
-
-    def __mul__(self, other):
-        tmp = super(FractRationnelle, self).__mul__(other)
-
-        return FractRationnelle(tmp.numer, tmp.denom)
 
     def degre(self):
         return self.numer.degre() - self.denom.degre()
@@ -102,5 +90,6 @@ class FractRationnelle(Rationnelle):
 
 p1, p2, p3 = Polynom([1]), Polynom([-1, 1]), Polynom([1, 1])
 r1, r2 = FractRationnelle(p1, p2), FractRationnelle(p1, p3)
-print(r1 + r2, ';', r1 * r2, ';', r1, ';', r2)
+print(r1, ' ; ', r2, ' ; ', p2 * p3)
+print(r1 + r2, ';', r1 * r2)
 print(r1(-1.3))

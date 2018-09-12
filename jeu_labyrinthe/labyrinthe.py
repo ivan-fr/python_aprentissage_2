@@ -10,7 +10,7 @@ from jeu_labyrinthe.utils import Cell
 class Main(Tk):
     def __init__(self):
         super(Main, self).__init__()
-        self.title = titre_fenetre
+        self.title = TITRE_FENETRE
 
         self.score = IntVar(0)
         self.score_label = Label(self, text="score " + str(self.score.get()))
@@ -92,7 +92,7 @@ class Labyrinthe(Canvas):
         self.master.bind('<<perdu>>', self.perdu)
 
     def remplir_structures(self, niveaux):
-        with open(fichier_de_niveaux, "r") as fichier:
+        with open(FICHIER_DE_NIVEAUX, "r") as fichier:
 
             active_colonne_boucle, niveau_dans_la_boucle = True, None
 
@@ -127,17 +127,17 @@ class Labyrinthe(Canvas):
 
         self.grid_width = len(structure[0])  # colonne
         self.grid_height = len(structure)  # ligne
-        self.cote_rectangle_x = int(cote_fenetre / self.grid_width)
-        self.cote_rectangle_y = int(cote_fenetre / self.grid_height)
+        self.cote_rectangle_x = int(COTE_FENETRE / self.grid_width)
+        self.cote_rectangle_y = int(COTE_FENETRE / self.grid_height)
 
-        self.configure(width=cote_fenetre, height=cote_fenetre)
+        self.configure(width=COTE_FENETRE, height=COTE_FENETRE)
 
-        for name in ('mur', 'nourriture', 'depart'):
-            setattr(self, 'photo_' + name,
-                    chargez_image_from_PIL(globals()['image_' + name],
+        for name in ('MUR', 'NOURRITURE', 'DEPART'):
+            setattr(self, 'photo_' + name.lower(),
+                    chargez_image_from_PIL(globals()['IMAGE_' + name],
                                            resize=(self.cote_rectangle_x, self.cote_rectangle_y)))
 
-            setattr(self.master, 'photo_' + name, getattr(self, 'photo_' + name))
+            setattr(self.master, 'photo_' + name.lower(), getattr(self, 'photo_' + name.lower()))
 
         coords_joueur, coords_gardiens, coords_sortie = (), [], ()
 
@@ -174,7 +174,7 @@ class Labyrinthe(Canvas):
             gardien.update_cible()
 
     def perdu(self, event):
-        text = self.create_text(cote_fenetre / 2, 20, anchor=CENTER, text="Perdu !!!", fill="black",
+        text = self.create_text(COTE_FENETRE / 2, 20, anchor=CENTER, text="Perdu !!!", fill="black",
                                 font="Arial 25 bold")
         rectangle = self.create_rectangle(self.bbox(text), fill="white")
         self.tag_lower(rectangle, text)
