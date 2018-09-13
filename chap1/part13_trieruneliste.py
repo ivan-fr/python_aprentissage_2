@@ -1,5 +1,5 @@
 def maxi(l, n):
-    if len(l) < n:
+    if len(l) <= n - 1:
         raise ValueError()
 
     # d = [max, index]
@@ -24,7 +24,7 @@ def tri_selec(l):
 
 print(tri_selec([100, 9, 32, 19, 21, 41, 129, 99, 39, 28]))
 
-print(maxi([9, 32, 19, 21, 41, 99, 39, 28, 100, 129], 7))
+print(maxi([131, 32, 19, 21, 41, 99, 39, 28, 100, 129], 7), "lool")
 
 
 def insertion(l, n):
@@ -41,27 +41,28 @@ def insertion(l, n):
 def insertion_(l, n):
     if len(l) <= n:
         raise AttributeError()
-
-    while l[n - 1] > l[n]:
+    # len(l) - 1 >= n
+    while l[n - 1] > l[n] and n >= 1:
         l[n], l[n - 1] = l[n - 1], l[n]
         n -= 1
 
-        if n == 1:
-            break
-
     return l
 
-print(insertion_([1, 4, 5, 6, 7, 8, 2], 6))
+print(insertion_([9, 50, 5, 6, 7, 8, 2], 3), "lol")
 
 
-def tri_insertion(l):
-    for i in range(1, len(l)):
-        insertion_(l, i)
+def tri_insertion(liste):
+    for i in range(1, len(liste)):
+        for j in range(i):
+            if liste[j] > liste[i]:
+                liste[j:j] = [liste[i]]
+                del liste[i + 1]
+                break
 
-    return l
+    return liste
 
 
-print(tri_insertion([100, 9, 32, 19, 21, 41, 129, 99, 39, 28]))
+print(tri_insertion([9, 50, 5, 6, 7, 8, 2]))
 
 
 def tri_rapide(l):
