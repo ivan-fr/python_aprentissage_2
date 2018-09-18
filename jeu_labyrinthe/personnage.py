@@ -169,12 +169,12 @@ class Joueur(Personnage):
         self.sortie = sortie
         self.joueur_move()
 
-
     def joueur_move(self):
         orientation_x, orientation_y = self.orientation_dict[self.orientation](self._x, self._y)
 
         if self.selected_orientation:
-            selected_orientation_x, selected_orientation_y = self.orientation_dict[self.selected_orientation](self._x, self._y)
+            selected_orientation_x, selected_orientation_y = self.orientation_dict[self.selected_orientation](self._x,
+                                                                                                              self._y)
 
             if self.get_cell(selected_orientation_x, selected_orientation_y).reachable:
                 orientation_x = selected_orientation_x
@@ -211,18 +211,18 @@ class Gardien(Astar):
         self.gardien_move()
 
     def update_cible(self):
-        # open list
-        self.opened = []
-        heapq.heapify(self.opened)
-        # visited cells list
-        self.closed = set()
-        self.clear_cells()
-
         if self.coord_gardien != (self.cible._x, self.cible._y):
+            # open list
+            self.opened = []
+            heapq.heapify(self.opened)
+            # visited cells list
+            self.closed = set()
+            self.clear_cells()
+
             self.init_path(self.coord_gardien, (self.cible._x, self.cible._y))
             self.path = self.solve()
 
-        self.index_path = 0
+            self.index_path = 0
 
     def gardien_move(self):
         if self.coord_gardien == (self.cible._x, self.cible._y):
