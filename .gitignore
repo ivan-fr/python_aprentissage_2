@@ -2,3 +2,4 @@ venv/*
 .idea/*
 .DS-Store
 .vscode/*
+__pycache__/*
