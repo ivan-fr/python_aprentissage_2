@@ -14,7 +14,7 @@
 
 -- SHOW WARNINGS;
 
--- USE elevage;
+USE elevage;
 
 -- CREATE TABLE Animal (
 --     id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -102,3 +102,14 @@
 -- MYSQL ONLY :
 -- INSERT INTO Animal
 -- SET nom='Bobo', espece='chien', sexe='M', date_naissance='2010-07-21 15:41:00';
+
+CREATE view Animal (
+    id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    espece VARCHAR(40) NOT NULL,
+    sexe CHAR(1),
+    date_naissance DATETIME NOT NULL,
+    nom VARCHAR(30),
+    commentaires TEXT,
+    PRIMARY KEY (id)
+)
+ENGINE=INNODB;
