@@ -1,4 +1,4 @@
-from .mysql_operateur import Operateur
+from mysql_operateur import Operateur
 
 operateur = Operateur()
 
@@ -7,7 +7,7 @@ while True:
     if recherche == "quit":
         break
 
-    resultat = operateur.get_research_result(recherche)
+    resultat = operateur(recherche)
 
     if resultat:
         produit = resultat[0]
@@ -16,6 +16,7 @@ while True:
         print("nom généric :", produit['produit_nom_generic'])
         print('nutrition grade :', produit['nutrition_grade'])
         print('categories :', produit['categories'])
+        print('ingredients :', produit['ingredients'])
 
         for subs in resultat[1:]:
             print("========")
@@ -23,6 +24,8 @@ while True:
             print("nom généric :", subs['produit_nom_generic'])
             print('nutrition grade :', subs['nutrition_grade'])
             print('categories :', subs['categories'])
+            print('ingredients :', subs['ingredients'])
+
 
     else:
         print("Aucun résultat")

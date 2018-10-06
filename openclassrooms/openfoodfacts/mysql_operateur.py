@@ -34,7 +34,7 @@ class Operateur(object):
 
         self.cursor = self.mydb.cursor()
 
-    def get_research_result(self, recherche):
+    def __call__(self, recherche):
         resultat = []
         words = " ".join(_find_words(recherche))
         result_args = self.cursor.callproc('verifier_si_produit_exist_by_match', (words, 0, 0, 0))
@@ -188,4 +188,4 @@ class Operateur(object):
 
 if __name__ == '__main__':
     operateur = Operateur()
-    print(operateur.get_research_result('3229820181950'))
+    print(operateur('3229820181950'))
