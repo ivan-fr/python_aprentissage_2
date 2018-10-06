@@ -43,7 +43,7 @@ class Operateur(object):
             new_produit_id = self._prepare_data_research(words)
             if not new_produit_id:
                 return resultat
-            result_args[1] = new_produit_id
+            result_args = (result_args[0], new_produit_id, result_args[2], result_args[3])
         elif not result_args[2] and not result_args[3]:
             self.cursor.callproc('get_produit_detail', (result_args[1],))
             resultat_secondaire = None
@@ -133,9 +133,9 @@ class Operateur(object):
             val = (_ingredient_id, r_id)
             self.cursor.execute(sql, val)
 
-        for dico in r.get('brands_tags', ''):
+        for brand in r.get('brands_tags', ''):
             sql = "INSERT INTO marque (nom, texte) VALUES (%s, %s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
-            val = (dico['text'], dico['text'])
+            val = (brand, brand)
             self.cursor.execute(sql, val)
 
             _marque_id = self.cursor.lastrowid
@@ -184,4 +184,4 @@ class Operateur(object):
 
 if __name__ == '__main__':
     operateur = Operateur()
-    print(operateur.get_research_result('nutella'))
+    print(operateur.get_research_result('Pépito'))
