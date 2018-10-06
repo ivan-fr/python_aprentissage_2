@@ -89,7 +89,7 @@ class Operateur(object):
 
         categories = r['categories'].split(',')
 
-        subsitutions = self._get_result_of_substitute_request(categories, r['nutrition_grades'])
+        subsitutions = self._get_result_of_substitute_request(categories, r.get('nutrition_grades', 'e'))
 
         return self._execute_product_sql_database(r, subsitutions)
 
@@ -102,7 +102,7 @@ class Operateur(object):
 
         sql = "INSERT INTO produit (nom, nom_generic, nutrition_grade, code_bar, code_bar_unique) " \
               "VALUES (%s, %s, %s, %s, %s);"
-        val = (r['product_name'], r['generic_name'], r['nutrition_grades'], r['code'], r['code'])
+        val = (r['product_name'], r['generic_name'], r.get('nutrition_grades', 'e'), r['code'], r['code'])
 
         self.cursor.execute(sql, val)
 
