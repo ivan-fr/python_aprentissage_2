@@ -90,9 +90,9 @@ add constraint fk_produit_substitute_produit_produit_id_1 foreign key (produit_i
 add constraint ffk_produit_substitute_produit_produit_id_2 foreign key (produit_id_2) references produit(id);
 
 
-drop procedure verifier_si_produit_exist;
+drop procedure verifier_si_produit_exist_by_match;
 DELIMITER |
-create procedure verifier_si_produit_exist(in recherche varchar(350),
+create procedure verifier_si_produit_exist_by_match(in recherche varchar(350),
 																   out p_produit_id smallint unsigned,
 																   out p_exist_substitutes boolean,
 																   out p_research_subsitutes boolean)
@@ -127,6 +127,24 @@ DELIMITER ;
 
 call verifier_si_produit_exist('pate à tartiner', @a, @b, @c);
 select @a, @b, @c;
+
+
+drop procedure verifier_si_produit_exist_by_code_bar;
+DELIMITER |
+create procedure verifier_si_produit_exist_by_code_bar(in p_code_bar varchar(50), out p_exist boolean)
+begin	
+	DECLARE EXIT HANDLER FOR NOT FOUND
+    begin
+		set p_exist = 0;
+    end;
+	
+    set p_exist = 1;
+    
+	select produit.id
+    from produit
+    where code_bar_unique = p_code_bar;
+end|
+DELIMITER ;
 
 
 drop procedure get_produit_detail;
