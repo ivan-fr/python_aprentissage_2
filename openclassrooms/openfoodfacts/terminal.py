@@ -26,6 +26,5 @@ while True:
             print('categories :', subs['categories'])
             print('ingredients :', subs['ingredients'])
 
-
     else:
         print("Aucun résultat")
