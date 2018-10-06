@@ -40,9 +40,10 @@ class Operateur(object):
         result_args = self.cursor.callproc('verifier_si_produit_exist_by_match', (words, 0, 0, 0))
 
         if not all(result_args[1:]):
-            if not self._prepare_data_research(words):
+            new_produit_id = self._prepare_data_research(words)
+            if not new_produit_id:
                 return resultat
-            result_args = self.cursor.callproc('verifier_si_produit_exist_by_match', (words, 0, 0, 0))
+            result_args[1] = new_produit_id
         elif not result_args[2] and not result_args[3]:
             self.cursor.callproc('get_produit_detail', (result_args[1],))
             resultat_secondaire = None
@@ -90,10 +91,14 @@ class Operateur(object):
 
         subsitutions = self._get_result_of_substitute_request(categories, r['nutrition_grades'])
 
-        self._execute_product_sql_database(r, subsitutions)
-        return True
+        return self._execute_product_sql_database(r, subsitutions)
 
     def _execute_product_sql_database(self, r, substitutes, deep=False):
+
+        result_args = self.cursor.callproc('verifier_si_produit_exist_by_code_bar', (r['code'], 0, 0))
+
+        if result_args[1]:
+            return result_args[2]
 
         sql = "INSERT INTO produit (nom, nom_generic, nutrition_grade, code_bar, code_bar_unique) " \
               "VALUES (%s, %s, %s, %s, %s);"
@@ -144,8 +149,8 @@ class Operateur(object):
 
         if not deep:
             self._execute_substitutes_sql_database(r_id, substitutes)
-        else:
-            return r_id
+
+        return r_id
 
     def _get_result_of_substitute_request(self, categories, nutrition_grades):
         substitutes = None
@@ -179,4 +184,4 @@ class Operateur(object):
 
 if __name__ == '__main__':
     operateur = Operateur()
-    operateur.get_research_result('nutella')
+    print(operateur.get_research_result('nutella'))

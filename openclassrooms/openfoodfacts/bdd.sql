@@ -131,7 +131,7 @@ select @a, @b, @c;
 
 drop procedure verifier_si_produit_exist_by_code_bar;
 DELIMITER |
-create procedure verifier_si_produit_exist_by_code_bar(in p_code_bar varchar(50), out p_exist boolean)
+create procedure verifier_si_produit_exist_by_code_bar(in p_code_bar varchar(50), out p_exist boolean, out p_produit_id smallint unsigned)
 begin	
 	DECLARE EXIT HANDLER FOR NOT FOUND
     begin
@@ -140,12 +140,14 @@ begin
 	
     set p_exist = 1;
     
-	select produit.id
+	select produit.id into p_produit_id
     from produit
     where code_bar_unique = p_code_bar;
 end|
 DELIMITER ;
 
+call verifier_si_produit_exist_by_code_bar('pate à tartiner', @a_, @b_);
+select @a_, @b_;
 
 drop procedure get_produit_detail;
 DELIMITER |
