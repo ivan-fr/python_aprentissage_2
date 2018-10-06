@@ -2,7 +2,7 @@ def _separator(string, separator):
     if string:
         cursor, i, string = 0, 0, string + separator
         while i <= len(string) - 1:
-            if string[i] in (separator, '\n', ',', '.', '?', '!', ')'):
+            if string[i] in (separator, ','):
                 if i - 1 >= cursor:
                     yield string[cursor:i]
                 delta = 1
@@ -42,13 +42,4 @@ words = filter_by_letters(words)
 print("'words' est encore un générateur. Le texte n'a toujours pas été lu")
 
 print("L'opération suivante va lancer la lecture du texte: ")
-print([w for w in words])
-
-def my_generator():
-    i = 40
-    while i <= 56:
-        i += 2
-        yield i
-t = my_generator()
-print([w for w in t])
-print([w for w in t])
+print(" ".join(words))
