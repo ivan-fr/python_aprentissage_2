@@ -88,53 +88,49 @@ class Operateur(object):
     def _execute_product_sql_database(self, r, subsitutions):
 
         sql = "INSERT INTO produit (nom, nom_generic, nutrition_grade, code_bar, code_bar_unique) " \
-              "VALUES (%s, %s, %s, %s, %s) " \
-              "ON DUPLICATE KEY UPDATE id = id;"
+              "VALUES (%s, %s, %s, %s, %s);"
         val = (r['product_name'], r['generic_name'], r['nutrition_grades'], r['code'], r['code'])
 
         self.cursor.execute(sql, val)
 
         r_id = self.cursor.lastrowid
 
-        if r_id:
-            for categorie in r.get('categories', '').split(','):
-                sql = "INSERT INTO categorie (nom) VALUES (%s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
-                val = (categorie,)
+        for categorie in r.get('categories', '').split(','):
+            sql = "INSERT INTO categorie (nom) VALUES (%s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
+            val = (categorie,)
+            self.cursor.execute(sql, val)
 
-                self.cursor.execute(sql, val)
-                _categorie_id = self.cursor.lastrowid
+            _categorie_id = self.cursor.lastrowid
 
-                sql = "INSERT INTO produit_categorie (categorie_id, produit_id) VALUES (%s, %s) " \
-                      "ON DUPLICATE KEY UPDATE categorie_id = categorie_id;"
-                val = (_categorie_id, r_id)
+            sql = "INSERT INTO produit_categorie (categorie_id, produit_id) VALUES (%s, %s) " \
+                  "ON DUPLICATE KEY UPDATE categorie_id = categorie_id;"
+            val = (_categorie_id, r_id)
+            self.cursor.execute(sql, val)
 
-                self.cursor.execute(sql, val)
+        for dico in r.get('ingredients', ''):
+            sql = "INSERT INTO ingredient (nom) VALUES (%s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
+            val = (dico['text'],)
+            self.cursor.execute(sql, val)
 
-            for dico in r.get('ingredients', ''):
-                sql = "INSERT INTO ingredient (nom) VALUES (%s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
-                val = (dico['text'],)
+            _ingredient_id = self.cursor.lastrowid
 
-                self.cursor.execute(sql, val)
-                _ingredient_id = self.cursor.lastrowid
+            sql = "INSERT INTO produit_ingredient (ingredient_id, produit_id) VALUES (%s, %s) " \
+                  "ON DUPLICATE KEY UPDATE ingredient_id = ingredient_id;"
 
-                sql = "INSERT INTO produit_ingredient (ingredient_id, produit_id) VALUES (%s, %s) " \
-                      "ON DUPLICATE KEY UPDATE ingredient_id = ingredient_id;"
-                val = (_ingredient_id, r_id)
+            val = (_ingredient_id, r_id)
+            self.cursor.execute(sql, val)
 
-                self.cursor.execute(sql, val)
+        for dico in r.get('brands_tags', ''):
+            sql = "INSERT INTO marque (nom, texte) VALUES (%s, %s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
+            val = (dico['text'], dico['text'])
+            self.cursor.execute(sql, val)
 
-            for dico in r.get('brands_tags', ''):
-                sql = "INSERT INTO marque (nom, texte) VALUES (%s, %s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
-                val = (dico['text'], dico['text'])
+            _marque_id = self.cursor.lastrowid
 
-                self.cursor.execute(sql, val)
-                _marque_id = self.cursor.lastrowid
-
-                sql = "INSERT INTO produit_marque (marque_id, produit_id) VALUES (%s, %s) " \
-                      "ON DUPLICATE KEY UPDATE marque_id = marque_id;"
-                val = (_marque_id, r_id)
-
-                self.cursor.execute(sql, val)
+            sql = "INSERT INTO produit_marque (marque_id, produit_id) VALUES (%s, %s) " \
+                  "ON DUPLICATE KEY UPDATE marque_id = marque_id;"
+            val = (_marque_id, r_id)
+            self.cursor.execute(sql, val)
 
         if subsitutions is not None:
             for subsitution in subsitutions:
