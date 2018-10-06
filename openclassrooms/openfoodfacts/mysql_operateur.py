@@ -22,7 +22,7 @@ def _find_words(string):
 
 class Operateur(object):
     search_url = "https://fr.openfoodfacts.org/cgi/search.pl"
-    product_url = "http://world.openfoodfacts.org/api/v0/product/{}.json"
+    product_url = "http://fr.openfoodfacts.org/api/v0/product/{}.json"
     stats_notes_categorie = "https://fr.openfoodfacts.org/categorie/{}/notes-nutritionnelles.json"
     product_notes_url = "https://fr.openfoodfacts.org/categorie/{}/note-nutritionnelle/{}.json"
 
@@ -155,8 +155,8 @@ class Operateur(object):
     def _get_result_of_substitute_request(self, categories, nutrition_grades):
         substitutes = None
 
-        max_len = map(len, categories)
-        categorie = max(item for item in categories if len(categories) == max_len)
+        max_len = max(map(len, categories))
+        categorie = max(item for item in categories if len(item) == max_len)
 
         r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)))
         r2 = r2.json()
@@ -188,4 +188,4 @@ class Operateur(object):
 
 if __name__ == '__main__':
     operateur = Operateur()
-    print(operateur('3229820181950'))
+    print(operateur('Nesquik'))
