@@ -39,7 +39,7 @@ class Operateur(object):
         words = " ".join(_find_words(recherche))
         result_args = self.cursor.callproc('verifier_si_produit_exist_by_match', (words, 0, 0, 0))
 
-        if not all(result_args[1:]):
+        if not any(result_args[1:]):
             new_produit_id = self._prepare_data_research(words)
             if not new_produit_id:
                 return resultat
@@ -63,7 +63,7 @@ class Operateur(object):
         for result in self.cursor.stored_results():
             resultat.append(dict(zip(result.column_names, result.fetchone())))
 
-        for substitute in resultat[0]['substitutes'].split(','):
+        for substitute in resultat[0].get('substitutes', '').split(','):
             self.cursor.callproc('get_produit_detail', (int(substitute),))
 
             for result in self.cursor.stored_results():
@@ -154,11 +154,15 @@ class Operateur(object):
 
     def _get_result_of_substitute_request(self, categories, nutrition_grades):
         substitutes = None
-        r2 = requests.get(self.stats_notes_categorie.format(slugify(max(categories))))
+
+        max_len = map(len, categories)
+        categorie = max(item for item in categories if len(categories) == max_len)
+
+        r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)))
         r2 = r2.json()
 
         if r2['tags'][0]['products'] > 0 and r2['tags'][0]['id'] < nutrition_grades:
-            r3 = requests.get(self.product_notes_url.format(slugify(max(categories)), r2['tags'][0]['id']))
+            r3 = requests.get(self.product_notes_url.format(slugify(categorie), r2['tags'][0]['id']))
             r3 = r3.json()
             substitutes = r3['products'][:5]
 
@@ -184,4 +188,4 @@ class Operateur(object):
 
 if __name__ == '__main__':
     operateur = Operateur()
-    print(operateur.get_research_result('Pépito'))
+    print(operateur.get_research_result('3229820181950'))

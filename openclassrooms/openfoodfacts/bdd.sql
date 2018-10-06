@@ -105,8 +105,8 @@ begin
     end;
         
 	select produit.id,
-			  case group_concat(produit_substitute_produit.produit_id_2)
-			  when null then 0
+			  case
+			  when group_concat(produit_substitute_produit.produit_id_2) is null then 0
 			  else 1
               end,
               produit.research_substitutes
@@ -125,7 +125,7 @@ begin
 end|
 DELIMITER ;
 
-call verifier_si_produit_exist('pate à tartiner', @a, @b, @c);
+call verifier_si_produit_exist_by_match('3229820181950', @a, @b, @c);
 select @a, @b, @c;
 
 
@@ -156,6 +156,7 @@ BEGIN
 	select produit.nom as produit_nom,
 			  produit.nom_generic as produit_nom_generic,
 			  produit.nutrition_grade,
+              produit.code_bar,
 			  group_concat(distinct categorie.nom separator ', ') as categories,
 			  group_concat(distinct ingredient.nom separator ', ') as ingredients,
 			  group_concat(distinct marque.nom separator ', ') as marques,
