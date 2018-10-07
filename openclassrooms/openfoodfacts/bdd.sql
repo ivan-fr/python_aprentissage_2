@@ -90,7 +90,6 @@ add constraint fk_produit_substitute_produit_produit_id_1 foreign key (produit_i
 add constraint ffk_produit_substitute_produit_produit_id_2 foreign key (produit_id_2) references produit(id);
 
 
-drop procedure verifier_si_produit_exist_by_match;
 DELIMITER |
 create procedure verifier_si_produit_exist_by_match(in recherche varchar(350),
 																   out p_produit_id smallint unsigned,
@@ -129,7 +128,6 @@ call verifier_si_produit_exist_by_match('3662072013370', @a, @b, @c);
 select @a, @b, @c;
 
 
-drop procedure verifier_si_produit_exist_by_code_bar;
 DELIMITER |
 create procedure verifier_si_produit_exist_by_code_bar(in p_code_bar varchar(50), out p_exist boolean, out p_produit_id smallint unsigned)
 begin	
@@ -149,7 +147,7 @@ DELIMITER ;
 call verifier_si_produit_exist_by_code_bar('pate à tartiner', @a_, @b_);
 select @a_, @b_;
 
-drop procedure get_produit_detail;
+
 DELIMITER |
 CREATE PROCEDURE get_produit_detail(in p_produit_id smallint unsigned)
 BEGIN

@@ -88,9 +88,13 @@ class Operateur(object):
             else:
                 return False
 
-        categories = r['categories'].split(',')
+        i = 0
+        while i <= len(r['categories_tags']) - 1:
+            if ':' in r['categories_tags'][i]:
+                r['categories_tags'][i] = (r['categories_tags'][i].split(':'))[1]
+            i += 1
 
-        subsitutions = self._get_result_of_substitute_request(categories, r.get('nutrition_grades', 'e'))
+        subsitutions = self._get_result_of_substitute_request(r['categories_tags'], r.get('nutrition_grades', 'e'))
 
         return self._execute_product_sql_database(r, subsitutions)
 
@@ -104,13 +108,13 @@ class Operateur(object):
         sql = "INSERT INTO produit (nom, nom_generic, nutrition_grade, code_bar, code_bar_unique) " \
               "VALUES (%s, %s, %s, %s, %s);"
         val = (
-        r.get('product_name', ''), r.get('generic_name', ''), r.get('nutrition_grades', 'e'), r['code'], r['code'])
+            r.get('product_name', ''), r.get('generic_name', ''), r.get('nutrition_grades', 'e'), r['code'], r['code'])
 
         self.cursor.execute(sql, val)
 
         r_id = self.cursor.lastrowid
 
-        for categorie in r.get('categories', '').split(','):
+        for categorie in r.get('categories_tags', ''):
             sql = "INSERT INTO categorie (nom) VALUES (%s) ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
             val = (categorie,)
             self.cursor.execute(sql, val)
@@ -159,10 +163,10 @@ class Operateur(object):
 
         # max_len = max(map(len, categories))
         # categorie = max(item for item in categories if len(item) == max_len)
-        categorie = categories[-1]
+        if not categories:
+            return substitutes
 
-        if ':' in categorie:
-            categorie = categorie.split(':')[1]
+        categorie = categories[-1]
 
         r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)), allow_redirects=False)
 
@@ -171,24 +175,33 @@ class Operateur(object):
             r2 = requests.get(self.stats_notes_categorie.format(categorie))
 
         r2 = r2.json()
+        print(categorie)
 
         if r2['count'] > 0 and r2['tags'][0]['id'] <= nutrition_grades:
             r3 = requests.get(self.product_notes_url.format(slugify(categorie), r2['tags'][0]['id']))
             r3 = r3.json()
             substitutes = r3['products'][:5]
 
+        if substitutes:
+            i = 0
+            while i <= len(substitutes['categories_tags']) - 1:
+                if ':' in substitutes['categories_tags'][i]:
+                    substitutes['categories_tags'][i] = (substitutes['categories_tags'][i].split(':'))[1]
+                i += 1
+
         return substitutes
 
     def _execute_substitutes_sql_database(self, produit_id, substitutes):
         if substitutes is not None:
-            for subsitution in substitutes:
-                subsitution_id = self._execute_product_sql_database(subsitution, None, True)
+            for substitution in substitutes:
 
-                if produit_id != subsitution_id:
+                substitution_id = self._execute_product_sql_database(substitution, None, True)
+
+                if produit_id != substitution_id:
                     sql = "INSERT INTO produit_substitute_produit (produit_id_1, produit_id_2, best) " \
                           "VALUES (%s, %s, %s) " \
                           "ON DUPLICATE KEY UPDATE produit_id_2 = produit_id_2;"
-                    val = (produit_id, subsitution_id, subsitution_id)
+                    val = (produit_id, substitution_id, substitution_id)
 
                     self.cursor.execute(sql, val)
 
