@@ -167,7 +167,7 @@ class Operateur(object):
 
         r2 = r2.json()
 
-        if r2['tags'][0]['products'] > 0 and r2['tags'][0]['id'] <= nutrition_grades:
+        if r2['count'] > 0 and r2['tags'][0]['id'] <= nutrition_grades:
             r3 = requests.get(self.product_notes_url.format(slugify(categorie), r2['tags'][0]['id']))
             r3 = r3.json()
             substitutes = r3['products'][:5]
