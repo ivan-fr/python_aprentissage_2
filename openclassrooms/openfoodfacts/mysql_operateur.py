@@ -63,7 +63,7 @@ class Operateur(object):
         for result in self.cursor.stored_results():
             resultat.append(dict(zip(result.column_names, result.fetchone())))
 
-        for substitute in resultat[0].get('substitutes', '').split(','):
+        for substitute in str(resultat[0].get('substitutes', '')).split(','):
             self.cursor.callproc('get_produit_detail', (int(substitute),))
 
             for result in self.cursor.stored_results():

@@ -50,8 +50,8 @@ CREATE TABLE produit_categorie (
 
 create table produit (
 	id smallint unsigned not null auto_increment,
-    nom varchar(100) not null,
-    nom_generic varchar(200) not null,
+    nom varchar(255) not null,
+    nom_generic varchar(255) not null,
     nutrition_grade varchar(1) not null,
     code_bar varchar(50) not null,
 	code_bar_unique varchar(50) not null,
