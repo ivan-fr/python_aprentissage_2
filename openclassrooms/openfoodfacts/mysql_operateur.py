@@ -156,8 +156,9 @@ class Operateur(object):
     def _get_result_of_substitute_request(self, categories, nutrition_grades):
         substitutes = None
 
-        max_len = max(map(len, categories))
-        categorie = max(item for item in categories if len(item) == max_len)
+        # max_len = max(map(len, categories))
+        # categorie = max(item for item in categories if len(item) == max_len)
+        categorie = categories[-1]
 
         r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)), allow_redirects=False)
 
