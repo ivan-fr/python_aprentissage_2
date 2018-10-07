@@ -103,7 +103,8 @@ class Operateur(object):
 
         sql = "INSERT INTO produit (nom, nom_generic, nutrition_grade, code_bar, code_bar_unique) " \
               "VALUES (%s, %s, %s, %s, %s);"
-        val = (r.get('product_name', ''), r.get('generic_name', ''), r.get('nutrition_grades', 'e'), r['code'], r['code'])
+        val = (
+        r.get('product_name', ''), r.get('generic_name', ''), r.get('nutrition_grades', 'e'), r['code'], r['code'])
 
         self.cursor.execute(sql, val)
 
