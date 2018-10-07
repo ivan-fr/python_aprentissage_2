@@ -23,7 +23,10 @@ while True:
     if recherche == "quit":
         break
 
-    resultat = operateur(recherche)
+    if recherche:
+        resultat = operateur(recherche)
+    else:
+        print("Aucun résultat")
 
     if resultat:
         produit = resultat[0]
