@@ -183,11 +183,12 @@ class Operateur(object):
             substitutes = r3['products'][:5]
 
         if substitutes:
-            i = 0
-            while i <= len(substitutes['categories_tags']) - 1:
-                if ':' in substitutes['categories_tags'][i]:
-                    substitutes['categories_tags'][i] = (substitutes['categories_tags'][i].split(':'))[1]
-                i += 1
+            for substitut in substitutes:
+                i = 0
+                while i <= len(substitut['categories_tags']) - 1:
+                    if ':' in substitut['categories_tags'][i]:
+                        substitut['categories_tags'][i] = (substitut['categories_tags'][i].split(':'))[1]
+                    i += 1
 
         return substitutes
 
