@@ -103,7 +103,7 @@ class Operateur(object):
 
         sql = "INSERT INTO produit (nom, nom_generic, nutrition_grade, code_bar, code_bar_unique) " \
               "VALUES (%s, %s, %s, %s, %s);"
-        val = (r['product_name'], r['generic_name'], r.get('nutrition_grades', 'e'), r['code'], r['code'])
+        val = (r.get('product_name', ''), r.get('generic_name', ''), r.get('nutrition_grades', 'e'), r['code'], r['code'])
 
         self.cursor.execute(sql, val)
 
@@ -160,6 +160,9 @@ class Operateur(object):
         # categorie = max(item for item in categories if len(item) == max_len)
         categorie = categories[-1]
 
+        if ':' in categorie:
+            categorie = categorie.split(':')[1]
+
         r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)), allow_redirects=False)
 
         if r2.status_code == 301:
@@ -197,4 +200,4 @@ class Operateur(object):
 
 if __name__ == '__main__':
     operateur = Operateur()
-    print(operateur('Nesquik'))
+    print(operateur('3297760097280'))
