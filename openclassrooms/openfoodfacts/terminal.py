@@ -20,13 +20,13 @@ operateur = Operateur()
 
 while True:
     recherche = input('Tapez votre recherche : ')
+    resultat = []
+
     if recherche == "quit":
         break
 
     if recherche:
         resultat = operateur(recherche)
-    else:
-        print("Aucun résultat")
 
     if resultat:
         produit = resultat[0]
