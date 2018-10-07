@@ -39,3 +39,5 @@ while True:
 
     print("==================")
     print()
+
+operateur.close()
