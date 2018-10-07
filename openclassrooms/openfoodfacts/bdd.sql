@@ -125,7 +125,7 @@ begin
 end|
 DELIMITER ;
 
-call verifier_si_produit_exist_by_match('3229820181950', @a, @b, @c);
+call verifier_si_produit_exist_by_match('3662072013370', @a, @b, @c);
 select @a, @b, @c;
 
 

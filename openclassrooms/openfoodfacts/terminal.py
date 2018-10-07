@@ -10,7 +10,8 @@ def printer(produit, substitut=False):
         print("Résultat produit :", produit['produit_nom'], '|', "code_bar :", produit['code_bar'])
 
     print("nom généric :", produit['produit_nom_generic'])
-    print('nutrition grade :', produit['nutrition_grade'])
+    print("marques :", produit['marques'])
+    print('nutrition grade :', produit['nutrition_grade'].upper())
     print('categories :', produit['categories'])
     print('ingredients :', produit['ingredients'])
 

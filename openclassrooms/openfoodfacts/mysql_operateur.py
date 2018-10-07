@@ -63,11 +63,12 @@ class Operateur(object):
         for result in self.cursor.stored_results():
             resultat.append(dict(zip(result.column_names, result.fetchone())))
 
-        for substitute in str(resultat[0].get('substitutes', '')).split(','):
-            self.cursor.callproc('get_produit_detail', (int(substitute),))
+        if resultat[0].get('substitutes', ''):
+            for substitute in str(resultat[0].get('substitutes', '')).split(','):
+                self.cursor.callproc('get_produit_detail', (int(substitute),))
 
-            for result in self.cursor.stored_results():
-                resultat.append(dict(zip(result.column_names, result.fetchone())))
+                for result in self.cursor.stored_results():
+                    resultat.append(dict(zip(result.column_names, result.fetchone())))
 
         return resultat
 
@@ -158,10 +159,15 @@ class Operateur(object):
         max_len = max(map(len, categories))
         categorie = max(item for item in categories if len(item) == max_len)
 
-        r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)))
+        r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)), allow_redirects=False)
+
+        if r2.status_code == 301:
+            categorie = re.search(r'^/categorie/([0-9a-z_\-]*).json$', r2.next.path_url).group(1)
+            r2 = requests.get(self.stats_notes_categorie.format(categorie))
+
         r2 = r2.json()
 
-        if r2['tags'][0]['products'] > 0 and r2['tags'][0]['id'] < nutrition_grades:
+        if r2['tags'][0]['products'] > 0 and r2['tags'][0]['id'] <= nutrition_grades:
             r3 = requests.get(self.product_notes_url.format(slugify(categorie), r2['tags'][0]['id']))
             r3 = r3.json()
             substitutes = r3['products'][:5]
@@ -173,11 +179,13 @@ class Operateur(object):
             for subsitution in substitutes:
                 subsitution_id = self._execute_product_sql_database(subsitution, None, True)
 
-                sql = "INSERT INTO produit_substitute_produit (produit_id_1, produit_id_2, best) VALUES (%s, %s, %s) " \
-                      "ON DUPLICATE KEY UPDATE produit_id_2 = produit_id_2;"
-                val = (produit_id, subsitution_id, subsitution_id)
+                if produit_id != subsitution_id:
+                    sql = "INSERT INTO produit_substitute_produit (produit_id_1, produit_id_2, best) " \
+                          "VALUES (%s, %s, %s) " \
+                          "ON DUPLICATE KEY UPDATE produit_id_2 = produit_id_2;"
+                    val = (produit_id, subsitution_id, subsitution_id)
 
-                self.cursor.execute(sql, val)
+                    self.cursor.execute(sql, val)
 
         sql = "UPDATE produit SET research_substitutes = %s WHERE id = %s"
         val = (1, produit_id)
