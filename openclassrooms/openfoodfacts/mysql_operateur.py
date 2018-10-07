@@ -52,8 +52,16 @@ class Operateur(object):
                 resultat_secondaire = dict(zip(result.column_names, result.fetchone()))
 
             if resultat_secondaire:
-                categories = resultat_secondaire['categories'].split(', ')
-                subs = self._get_result_of_substitute_request(categories, resultat_secondaire['nutrition_grade'])
+                r = requests.get(self.product_url.format(resultat_secondaire['code_bar']))
+                r = r.json()
+
+                i = 0
+                while i <= len(r['categories_tags']) - 1:
+                    if ':' in r['categories_tags'][i]:
+                        r['categories_tags'][i] = (r['categories_tags'][i].split(':'))[1]
+                    i += 1
+
+                subs = self._get_result_of_substitute_request(r['categories_tags'], resultat_secondaire['nutrition_grade'])
                 self._execute_substitutes_sql_database(result_args[1], subs)
             else:
                 raise Exception('callproc get_produit_detail n\' a pas donné de résultat.')
@@ -167,7 +175,7 @@ class Operateur(object):
             return substitutes
 
         categorie = categories[-1]
-
+        print(categorie)
         r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)), allow_redirects=False)
 
         if r2.status_code == 301:
