@@ -175,6 +175,8 @@ class Operateur(object):
             return substitutes
 
         categorie = categories[-1]
+        print(categorie)
+
         r2 = requests.get(self.stats_notes_categorie.format(slugify(categorie)), allow_redirects=False)
 
         if r2.status_code == 301:
@@ -182,6 +184,8 @@ class Operateur(object):
             r2 = requests.get(self.stats_notes_categorie.format(categorie))
 
         r2 = r2.json()
+
+        print(categorie)
 
         if r2['count'] > 0 and r2['tags'][0]['id'] <= nutrition_grades:
             r3 = requests.get(self.product_notes_url.format(slugify(categorie), r2['tags'][0]['id']))
