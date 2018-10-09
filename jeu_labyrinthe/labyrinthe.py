@@ -1,9 +1,9 @@
 from tkinter import *
 
-from jeu_labyrinthe.constants import *
-from jeu_labyrinthe.utils import chargez_image_from_PIL
-from jeu_labyrinthe.personnage import Joueur, Gardien
-from jeu_labyrinthe.utils import Cell
+from constants import *
+from utils import chargez_image_from_PIL
+from personnage import Joueur, Gardien
+from utils import Cell
 
 
 class Main(Tk):

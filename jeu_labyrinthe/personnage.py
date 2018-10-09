@@ -1,6 +1,6 @@
-from jeu_labyrinthe.constants import *
-from jeu_labyrinthe.utils import chargez_image_from_PIL
-from jeu_labyrinthe.utils import Cell
+from constants import *
+from utils import chargez_image_from_PIL
+from utils import Cell
 
 import heapq
 
@@ -236,4 +236,4 @@ class Gardien(Astar):
         if self.coord_gardien == (self.cible._x, self.cible._y):
             self.canvas.master.event_generate('<<perdu>>')
 
-        self.boucle_after = self.canvas.master.after(150, self.gardien_move)
+        self.boucle_after = self.canvas.master.after(400, self.gardien_move)
